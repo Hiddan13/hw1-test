@@ -17,15 +17,13 @@ issues:
         - dupl
         - gocyclo
         - gosec
-
 linters:
-  
-  disable:
-    #- deadcode
-    #- structcheck
-    #- varcheck
-    #- ifshort
+  disable-all: true
   enable:
+    - deadcode
+    - structcheck
+    - varcheck
+    - ifshort
     - asciicheck
     - bodyclose
     - depguard

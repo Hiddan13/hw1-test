@@ -6,8 +6,8 @@ import (
 )
 
 func TestText(t *testing.T) {
-	var t1, result = "Hello, OTUS!", "!SUTO ,olleH"
-	realResult := HeadText(t1)
+	var textTesting, result = "Hello, OTUS!", "!SUTO ,olleH"
+	realResult := Reverse(textTesting)
 	if realResult != result {
 		t.Errorf("%s != %s", realResult, result)
 		fmt.Println("invalid output:", realResult)

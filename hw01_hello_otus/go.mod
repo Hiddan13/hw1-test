@@ -1,4 +1,5 @@
-module github.com/fixme_my_friend/hw01_hello_otus
+module github.com/Hiddan13/hw1-test
+
 
 go 1.16
 
