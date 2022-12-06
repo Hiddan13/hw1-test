@@ -7,6 +7,10 @@ import (
 )
 
 func main() {
-	fmt.Println(stringutil.Reverse("Hello OTUS!"))
-
+	text := "Hello OTUS!"
+	fmt.Println(HeadText(text))
+}
+func HeadText(t string) string {
+	text01 := stringutil.Reverse(t)
+	return text01
 }
