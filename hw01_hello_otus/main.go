@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	text := "Hello OTUS!"
+	text := "Hello, OTUS!"
 	fmt.Println(HeadText(text))
 }
 func HeadText(t string) string {
