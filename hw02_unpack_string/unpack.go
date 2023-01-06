@@ -34,17 +34,17 @@ func Unpack(mixed string) (string, error) {
 		case typ == letter:
 			switch {
 			case typ1 == letter:
-				result.WriteString(string(value1))
+				result.WriteString(value1)
 			case typ1 == "\\":
 				return "letter after \\", ErrInvalidString
 			}
 		case typ == "\\n" && value1 != "":
-			result.WriteString(string(value1))
+			result.WriteString(value1)
 			value = "\\n"
 		case typ == "\\" && value1 != "" && !itsSlash:
 			itsSlash = true
 			if typ1 == letter {
-				result.WriteString(string(value1))
+				result.WriteString(value1)
 			}
 		case typ == "\\" && typ1 == "\\" && !itsDoubleslash:
 			itsDoubleslash = true
@@ -60,12 +60,12 @@ func Unpack(mixed string) (string, error) {
 				if numberint == 0 {
 					break
 				}
-				result.WriteString(string(strings.Repeat(string(value1), numberint)))
+				result.WriteString(strings.Repeat(string(value1), numberint))
 			case itsDoubleslash:
 				if numberint == 0 {
 					break
 				}
-				result.WriteString(string(strings.Repeat(string(value1), numberint)))
+				result.WriteString(strings.Repeat(string(value1), numberint))
 				itsDoubleslash = false
 
 			case itsSlash:
@@ -73,11 +73,11 @@ func Unpack(mixed string) (string, error) {
 					if numberint == 0 {
 						break
 					}
-					result.WriteString(string(strings.Repeat(string(value1), numberint-1)))
+					result.WriteString(strings.Repeat(string(value1), numberint-1))
 					itsSlash = false
 					break
 				}
-				result.WriteString(string(value))
+				result.WriteString(value)
 			}
 		case typ == "\\n" && value1 == "" || typ == "\\" && value1 == "" || typ == number && value1 == "":
 			return "first rune is not letter", ErrInvalidString
@@ -86,7 +86,7 @@ func Unpack(mixed string) (string, error) {
 		typ1 = typ
 	}
 	if typ1 == letter {
-		result.WriteString(string(value))
+		result.WriteString(value)
 	}
 	return result.String(), nil
 }
