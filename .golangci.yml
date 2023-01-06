@@ -17,13 +17,10 @@ issues:
         - dupl
         - gocyclo
         - gosec
+
 linters:
   disable-all: true
   enable:
-    - deadcode
-    - structcheck
-    - varcheck
-    - ifshort
     - asciicheck
     - bodyclose
     - depguard
