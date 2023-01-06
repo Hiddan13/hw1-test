@@ -8,7 +8,7 @@ import (
 	"unicode"
 )
 
-const c_mixed = "g2n0bb"
+const c_mixed = "n0bb"
 
 var its_slash bool
 
