@@ -8,11 +8,15 @@ import (
 	"unicode"
 )
 
-const c_mixed = "n0bb"
+const (
+	cMixed = "n0bb"
+	letter = "letter"
+	number = "number"
+)
 
-var its_slash bool
+var itsSlash bool
 
-var its_doubleslash bool
+var itsDoubleslash bool
 
 var numberint int
 
@@ -25,79 +29,63 @@ func Unpack(mixed string) (string, error) {
 	var runeline = []rune(mixed)
 	fmt.Println(runeline)
 	for _, c := range runeline {
-
 		typ, value = Define(c)
-
 		switch {
-		case typ == "letter":
+		case typ == letter:
 			switch {
-			case typ1 == "letter":
+			case typ1 == letter:
 				result.WriteString(string(value1))
-
 			case typ1 == "\\":
 				return "letter after \\", ErrInvalidString
 			}
-
 		case typ == "\\n" && value1 != "":
 			result.WriteString(string(value1))
 			value = "\\n"
-
-		case typ == "\\" && value1 != "" && !its_slash:
-
-			its_slash = true
-			if typ1 == "letter" {
+		case typ == "\\" && value1 != "" && !itsSlash:
+			itsSlash = true
+			if typ1 == letter {
 				result.WriteString(string(value1))
 			}
-		case typ == "\\" && typ1 == "\\" && !its_doubleslash:
-
-			its_doubleslash = true
-			its_slash = false
-		case typ == "number" && value1 != "":
+		case typ == "\\" && typ1 == "\\" && !itsDoubleslash:
+			itsDoubleslash = true
+			itsSlash = false
+		case typ == number && value1 != "":
 			if s, err := strconv.Atoi(string(value)); err == nil {
 				numberint = s
-
 			}
-
 			switch {
-
-			case typ1 == "number" && !its_slash && !its_doubleslash:
+			case typ1 == number && !itsSlash && !itsDoubleslash:
 				return "number after number", ErrInvalidString
-			case typ1 == "letter" || typ1 == "\\n":
+			case typ1 == letter || typ1 == "\\n":
 				if numberint == 0 {
-
 					break
 				}
 				result.WriteString(string(strings.Repeat(string(value1), numberint)))
-
-			case its_doubleslash:
+			case itsDoubleslash:
 				if numberint == 0 {
-
 					break
 				}
 				result.WriteString(string(strings.Repeat(string(value1), numberint)))
-				its_doubleslash = false
+				itsDoubleslash = false
 
-			case its_slash:
-				if typ == "number" && typ1 == "number" {
+			case itsSlash:
+				if typ == number && typ1 == number {
 					if numberint == 0 {
-
 						break
 					}
 					result.WriteString(string(strings.Repeat(string(value1), numberint-1)))
-					its_slash = false
+					itsSlash = false
 					break
 				}
 				result.WriteString(string(value))
 			}
-
-		case typ == "\\n" && value1 == "" || typ == "\\" && value1 == "" || typ == "number" && value1 == "":
+		case typ == "\\n" && value1 == "" || typ == "\\" && value1 == "" || typ == number && value1 == "":
 			return "first rune is not letter", ErrInvalidString
 		}
 		value1 = value
 		typ1 = typ
 	}
-	if typ1 == "letter" {
-
+	if typ1 == letter {
 		result.WriteString(string(value))
 	}
 	return result.String(), nil
@@ -107,23 +95,23 @@ func Define(c rune) (typ string, value string) {
 	case !unicode.IsDigit(c):
 		switch {
 		case c != 10 && c != 92:
-			res := "letter"
+			res := letter
 			return res, string(c)
-		case c == 10: //\n
+		case c == 10: // \n
 			res := "\\n"
 			return res, string(c)
-		case c == 92: //\
+		case c == 92: // \
 			res := "\\"
 			return res, string(c)
 		}
 	case unicode.IsDigit(c):
-		res := "number"
+		res := number
 		return res, string(c)
 	}
 	return
 }
 
 func main() {
-	fmt.Println(Unpack(c_mixed))
+	fmt.Println(Unpack(cMixed))
 
 }
