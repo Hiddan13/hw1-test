@@ -11,6 +11,7 @@ func main() {
 
 	fmt.Println(Reverse(originalText))
 }
+
 func Reverse(text string) string {
 	resultText := stringutil.Reverse(text)
 	return resultText
