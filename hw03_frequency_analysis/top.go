@@ -25,8 +25,9 @@ func main() {
 	mySlice = Top10(text2)
 	fmt.Println(mySlice)
 }
+
 func Top10(t string) []string {
-	var resultSlice = []Words{}
+	resultSlice := []Words{}
 	var res []string
 	sSlice = strings.Fields(t)
 	for _, x := range sSlice {
