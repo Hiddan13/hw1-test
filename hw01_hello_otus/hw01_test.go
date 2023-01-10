@@ -6,7 +6,7 @@ import (
 )
 
 func TestText(t *testing.T) {
-	var textTesting, result = "Hello, OTUS!", "!SUTO ,olleH"
+	textTesting, result := "Hello, OTUS!", "!SUTO ,olleH"
 	realResult := Reverse(textTesting)
 	if realResult != result {
 		t.Errorf("%s != %s", realResult, result)
