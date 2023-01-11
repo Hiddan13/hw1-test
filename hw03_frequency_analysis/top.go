@@ -42,11 +42,12 @@ func Top10(t string) []string {
 		numWord = 0
 	}
 	sort.Slice(resultSlice, func(i, j int) bool {
-		if resultSlice[i].Num == resultSlice[j].Num { // если одинаковое количество раз встречается - то сортируем лексеграфически
+		// если одинаковое количество раз встречается - то сортируем лексеграфически
+		if resultSlice[i].Num == resultSlice[j].Num {
 			return resultSlice[i].Word < resultSlice[j].Word
-		} else {
-			return resultSlice[i].Num > resultSlice[j].Num // иначе просто по каличеству
 		}
+		return resultSlice[i].Num > resultSlice[j].Num // иначе просто по каличеству
+
 	})
 	ss := DelReplay(resultSlice)
 	for a, s := range ss {
