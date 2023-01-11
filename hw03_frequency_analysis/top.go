@@ -47,7 +47,6 @@ func Top10(t string) []string {
 			return resultSlice[i].Word < resultSlice[j].Word
 		}
 		return resultSlice[i].Num > resultSlice[j].Num // иначе просто по каличеству
-
 	})
 	ss := DelReplay(resultSlice)
 	for a, s := range ss {
