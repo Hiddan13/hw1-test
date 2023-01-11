@@ -31,7 +31,7 @@ func Unpack(mixed string) (string, error) {
 				result.WriteString(value1)
 			}
 		case typ == number && value1 != "":
-			if s, err := strconv.Atoi(string(value)); err == nil {
+			if s, err := strconv.Atoi(value); err == nil {
 				numberint = s
 			}
 			switch {
@@ -41,7 +41,7 @@ func Unpack(mixed string) (string, error) {
 				if numberint == 0 {
 					break
 				}
-				result.WriteString(strings.Repeat(string(value1), numberint))
+				result.WriteString(strings.Repeat(value1, numberint))
 			}
 		case typ == number && value1 == "":
 			return "first rune is not letter", ErrInvalidString
@@ -59,10 +59,10 @@ func Define(c rune) (typ string, value string) {
 	if unicode.IsDigit(c) {
 		res := number
 		return res, string(c)
-	} else {
-		res := letter
-		return res, string(c)
 	}
+	res := letter
+	return res, string(c)
+
 }
 
 func main() {
