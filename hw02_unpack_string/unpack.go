@@ -62,7 +62,6 @@ func Define(c rune) (typ string, value string) {
 	}
 	res := letter
 	return res, string(c)
-
 }
 
 func main() {
