@@ -8,7 +8,7 @@ import (
 
 const text2 = ""
 
-var sSlice []strin
+var sSlice []string
 
 var valueSlice string
 
