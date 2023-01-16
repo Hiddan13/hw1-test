@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const text1 = ``
+const text1 = `w`
 
 type Words struct {
 	Word string
@@ -14,7 +14,7 @@ type Words struct {
 }
 
 func Top10(text string) []string {
-	var resSlice = []Words{}
+	resSlice := []Words{}
 	ma := make(map[string]int)
 	input := strings.Fields(text)
 
