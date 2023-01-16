@@ -13,16 +13,15 @@ type Words struct {
 	Num  int
 }
 
-var resSlice = []Words{}
-
 func Top10(text string) []string {
+	var resSlice = []Words{}
 	ma := make(map[string]int)
 	input := strings.Fields(text)
 
 	for _, word := range input {
 		_, match := ma[word]
 		if match {
-			ma[word] += 1
+			ma[word]++
 		} else {
 			ma[word] = 1
 		}
