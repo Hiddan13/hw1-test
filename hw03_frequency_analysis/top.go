@@ -25,7 +25,6 @@ func Top10(text string) []string {
 		} else {
 			ma[word] = 1
 		}
-
 	}
 
 	for key, value := range ma {
