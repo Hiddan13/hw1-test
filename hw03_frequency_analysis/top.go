@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const text1 = `w`
+const text1 = ""
 
 type Words struct {
 	Word string
