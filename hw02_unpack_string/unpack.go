@@ -22,7 +22,6 @@ func Unpack(text string) (string, error) {
 	var result strings.Builder
 	var value, typ, value1, typ1 string
 	runeline := []rune(text)
-
 	for _, c := range string(runeline) {
 		typ, value = DefineTypeOfLetter(c)
 		switch {
@@ -47,7 +46,6 @@ func Unpack(text string) (string, error) {
 		case typ == number && value1 == "":
 			ErrInvalidString = errors.New("first rune is not letter")
 			return "", ErrInvalidString
-
 		}
 		value1 = value
 		typ1 = typ
