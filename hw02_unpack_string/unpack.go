@@ -9,22 +9,21 @@ import (
 )
 
 const (
-	cMixed = "a4bc2d5e"
-	letter = "letter"
-	number = "number"
+	TextDefauilt = "a4b2"
+	letter       = "letter"
+	number       = "number"
 )
 
 var numberint int
 
 var ErrInvalidString = errors.New("invalid string")
 
-func Unpack(mixed string) (string, error) {
+func Unpack(text string) (string, error) {
 	var result strings.Builder
 	var value, typ, value1, typ1 string
-	runeline := []rune(mixed)
-	fmt.Println(runeline)
+	runeline := []rune(text)
 	for _, c := range runeline {
-		typ, value = Define(c)
+		typ, value = DefineTypeOfLetter(c)
 		switch {
 		case typ == letter:
 			if typ1 == letter {
@@ -36,7 +35,7 @@ func Unpack(mixed string) (string, error) {
 			}
 			switch {
 			case typ1 == number:
-				return "number after number", ErrInvalidString
+				return "", errors.New("number after number")
 			case typ1 == letter:
 				if numberint == 0 {
 					break
@@ -44,7 +43,7 @@ func Unpack(mixed string) (string, error) {
 				result.WriteString(strings.Repeat(value1, numberint))
 			}
 		case typ == number && value1 == "":
-			return "first rune is not letter", ErrInvalidString
+			return "", errors.New("first rune is not letter")
 		}
 		value1 = value
 		typ1 = typ
@@ -55,15 +54,15 @@ func Unpack(mixed string) (string, error) {
 	return result.String(), nil
 }
 
-func Define(c rune) (typ string, value string) {
-	if unicode.IsDigit(c) {
-		res := number
-		return res, string(c)
+func DefineTypeOfLetter(let rune) (typ string, value string) {
+	if unicode.IsDigit(let) {
+		typeOfLetter := number
+		return typeOfLetter, string(let)
 	}
-	res := letter
-	return res, string(c)
+	resultType := letter
+	return resultType, string(let)
 }
 
 func main() {
-	fmt.Println(Unpack(cMixed))
+	fmt.Println(Unpack(TextDefauilt))
 }
