@@ -98,8 +98,8 @@ func Test_Top10my(t *testing.T) {
 			познакомиться.
 			- Винни-Пух. Очень приятно!`, expectedLetters: []string{"он", "бы", "и", "-", "Как", "с", "Винни-Пух.", "Другого", "Иногда", "Кристофером"},
 		},
-		{inputText: `aa a a b bbb b b e e ee`, expectedLetters: []string{"b", "a", "e", "a", "a", "bbb", "ee"}},
-		{inputText: `b k r k k s e rr e b b a e a a y yy ee ee a o po`, expectedLetters: []string{"a", "b", "e", "k", "ee", "o", "po", "r", "rr", "s"}},
+		{inputText: "aa a a b bbb b b e e ee", expectedLetters: []string{"b", "a", "e", "a", "a", "bbb", "ee"}},
+		{inputText: "b k r k k s e rr e b b a e a a y yy ee ee a o po", expectedLetters: []string{"a", "b", "e", "k", "ee", "o", "po", "r", "rr", "s"}},
 	}
 	for _, tC := range testCases {
 		tC := tC
