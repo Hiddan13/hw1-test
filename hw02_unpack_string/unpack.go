@@ -14,6 +14,11 @@ const (
 	number       = "number"
 )
 
+var (
+	ErrNumAfterNum    = errors.New("number after number")
+	ErrFirstNotLetter = errors.New("first rune is not letterr")
+)
+
 var numberint int
 
 func Unpack(text string) (string, error) {
@@ -33,7 +38,7 @@ func Unpack(text string) (string, error) {
 			}
 			switch {
 			case typ1 == number:
-				return "", errors.New("number after number")
+				return "", ErrNumAfterNum
 			case typ1 == letter:
 				if numberint == 0 {
 					break
@@ -41,7 +46,7 @@ func Unpack(text string) (string, error) {
 				result.WriteString(strings.Repeat(value1, numberint))
 			}
 		case typ == number && value1 == "":
-			return "", errors.New("first rune is not letter")
+			return "", ErrFirstNotLetter
 		}
 		value1 = value
 		typ1 = typ

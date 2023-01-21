@@ -42,12 +42,12 @@ func TestUnpackInvalidString(t *testing.T) {
 		input         string
 		expectedError error
 	}{
-		{input: "b2m41i", expectedError: errors.New("number after number")},
-		{input: "aaa10b", expectedError: errors.New("number after number")},
-		{input: "nn23e", expectedError: errors.New("number after number")},
-		{input: "3n5g", expectedError: errors.New("first rune is not letter")},
-		{input: "3abc", expectedError: errors.New("first rune is not letter")},
-		{input: "45", expectedError: errors.New("first rune is not letter")},
+		{input: "b2m41i", expectedError: ErrNumAfterNum},
+		{input: "aaa10b", expectedError: ErrNumAfterNum},
+		{input: "nn23e", expectedError: ErrNumAfterNum},
+		{input: "3n5g", expectedError: ErrFirstNotLetter},
+		{input: "3abc", expectedError: ErrFirstNotLetter},
+		{input: "45", expectedError: ErrFirstNotLetter},
 	}
 	for i := range testsError {
 		tc := testsError[i]
