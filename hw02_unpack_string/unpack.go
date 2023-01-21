@@ -16,7 +16,6 @@ const (
 
 var numberint int
 
-// var ErrInvalidString = errors.New("invalid string")
 func Unpack(text string) (string, error) {
 	var result strings.Builder
 	var value, typ, value1, typ1 string
