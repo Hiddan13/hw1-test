@@ -49,9 +49,11 @@ func TestUnpackInvalidString(t *testing.T) {
 		{input: "3abc", expectedError: errors.New("first rune is not letter")},
 		{input: "45", expectedError: errors.New("first rune is not letter")},
 	}
-	for _, tc := range testsError {
-		tc := tc
+	for i := range testsError {
+		tc := testsError[i]
+
 		t.Run(tc.input, func(t *testing.T) {
+			t.Parallel()
 			_, errorUnpack := Unpack(tc.input)
 			errors.Is(errorUnpack, tc.expectedError)
 		})
