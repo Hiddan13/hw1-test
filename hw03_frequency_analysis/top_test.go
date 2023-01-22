@@ -1,4 +1,4 @@
-package hw03frequencyanalysis
+package main
 
 import (
 	"testing"
@@ -79,4 +79,38 @@ func TestTop10(t *testing.T) {
 			require.Equal(t, expected, Top10(text))
 		}
 	})
+}
+
+func Test_Top10my(t *testing.T) {
+	testCases := []struct {
+		inputText       string
+		expectedLetters []string
+	}{
+		{
+			inputText: `Как видите, он  спускается  по  лестнице  вслед  за  своим
+			другом   Кристофером   Робином,   головой   вниз,  пересчитывая
+			ступеньки собственным затылком:  бум-бум-бум.  Другого  способа
+			сходить  с  лестницы  он  пока  не  знает.  Иногда ему, правда,
+				кажется, что можно бы найти какой-то другой способ, если бы  он
+			только   мог   на  минутку  перестать  бумкать  и  как  следует
+			сосредоточиться. Но увы - сосредоточиться-то ему и некогда.
+				Как бы то ни было, вот он уже спустился  и  готов  с  вами
+			познакомиться.
+			- Винни-Пух. Очень приятно!`,
+			expectedLetters: []string{"он", "бы", "и", "-", "Как", "с", "Винни-Пух.", "Другого", "Иногда", "Кристофером"},
+		},
+		{
+			inputText:       "aa a a b bbb b b e e ee",
+			expectedLetters: []string{"b", "a", "e", "a", "a", "bbb", "ee"},
+		},
+		{
+			inputText:       "b k r k k s e rr e b b a e a a y yy ee ee a o po",
+			expectedLetters: []string{"a", "b", "e", "k", "ee", "o", "po", "r", "rr", "s"},
+		},
+	}
+	for _, tC := range testCases {
+		tC := tC
+		t.Run(tC.inputText, func(t *testing.T) {
+		})
+	}
 }
