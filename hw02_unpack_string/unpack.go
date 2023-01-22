@@ -25,6 +25,8 @@ func Unpack(text string) (string, error) {
 	for _, c := range string(runeline) {
 		typ, value = DefineTypeOfLetter(c)
 		switch {
+		case c > unicode.MaxASCII:
+
 		case typ == letter:
 			if typ1 == letter {
 				result.WriteString(value1)
