@@ -48,6 +48,8 @@ func TestUnpackInvalidString(t *testing.T) {
 		{input: "3n5g", expectedError: ErrFirstNotLetter},
 		{input: "3abc", expectedError: ErrFirstNotLetter},
 		{input: "45", expectedError: ErrFirstNotLetter},
+		{input: "¡", expectedError: ErrNotASCII},
+		{input: "¥", expectedError: ErrNotASCII},
 	}
 	for i := range testsError {
 		tc := testsError[i]

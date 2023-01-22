@@ -17,6 +17,7 @@ const (
 var (
 	ErrNumAfterNum    = errors.New("number after number")
 	ErrFirstNotLetter = errors.New("first rune is not letterr")
+	ErrNotASCII       = errors.New("letter is not ASCII")
 )
 
 var numberint int
@@ -28,6 +29,8 @@ func Unpack(text string) (string, error) {
 	for _, c := range string(runeline) {
 		typ, value = DefineTypeOfLetter(c)
 		switch {
+		case c > unicode.MaxASCII:
+			return "", ErrNotASCII
 		case typ == letter:
 			if typ1 == letter {
 				result.WriteString(value1)
