@@ -6,30 +6,31 @@ import (
 	"strings"
 )
 
-const text1 = ""
+const text1 = ``
 
 type Words struct {
 	Word string
 	Num  int
 }
 
-func Top10(text string) []string {
-	resSlice := []Words{}
-	ma := make(map[string]int)
-	input := strings.Fields(text)
+var resSlice = []Words{}
 
-	for _, word := range input {
-		_, match := ma[word]
-		if match {
-			ma[word]++
-		} else {
-			ma[word] = 1
-		}
+func Top10(text string) []string {
+	if text == "" {
+		return make([]string, 0)
+	}
+	WordsMap := make(map[string]int)
+	InputText := strings.Fields(text)
+	// var SliceWords []string
+	SliceWords := make([]string, 10)
+
+	for _, word := range InputText {
+		WordsMap[word]++
 	}
 
-	for key, value := range ma {
-		aaa := Words{key, value}
-		resSlice = append(resSlice, aaa)
+	for key, value := range WordsMap {
+		word := Words{key, value}
+		resSlice = append(resSlice, word)
 	}
 	sort.Slice(resSlice, func(i, j int) bool {
 		// если одинаковое количество раз встречается - то сортируем лексеграфически
@@ -39,15 +40,15 @@ func Top10(text string) []string {
 		return resSlice[i].Num > resSlice[j].Num // иначе просто по каличеству
 	})
 
-	var res []string
-	for a, s := range resSlice {
-		if a == 10 {
+	for index, wordinslice := range resSlice {
+		if index == 10 {
 			break
 		} else {
-			res = append(res, s.Word)
+			SliceWords[index] = wordinslice.Word
+			// SliceWords = append(SliceWords, wordinslice.Word)
 		}
 	}
-	return res
+	return SliceWords
 }
 
 func main() {
