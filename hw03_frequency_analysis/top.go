@@ -16,23 +16,24 @@ type Words struct {
 var resSlice = []Words{}
 
 func Top10(text string) []string {
-	ma := make(map[string]int)
-	input := strings.Fields(text)
-	var res []string
+	if text == "" {
+		return make([]string, 0)
+	}
+	WordsMap := make(map[string]int)
+	inputText := strings.Fields(text)
+	// var SliceWords []string
+	SliceWords := make([]string, 10)
 
-	for _, word := range input {
-		_, match := ma[word]
-		if match {
-			ma[word] += 1
-		} else {
-			ma[word] = 1
-		}
+	for _, word := range inputText {
+		//_, match := WordsMap[word]
+
+		WordsMap[word]++
 
 	}
 
-	for key, value := range ma {
-		aaa := Words{key, value}
-		resSlice = append(resSlice, aaa)
+	for key, value := range WordsMap {
+		word := Words{key, value}
+		resSlice = append(resSlice, word)
 	}
 	sort.Slice(resSlice, func(i, j int) bool {
 		// если одинаковое количество раз встречается - то сортируем лексеграфически
@@ -42,14 +43,15 @@ func Top10(text string) []string {
 		return resSlice[i].Num > resSlice[j].Num // иначе просто по каличеству
 	})
 
-	for a, s := range resSlice {
-		if a == 10 {
+	for index, wordinslice := range resSlice {
+		if index == 10 {
 			break
 		} else {
-			res = append(res, s.Word)
+			SliceWords[index] = wordinslice.Word
+			// SliceWords = append(SliceWords, wordinslice.Word)
 		}
 	}
-	return res
+	return SliceWords
 }
 
 func main() {
