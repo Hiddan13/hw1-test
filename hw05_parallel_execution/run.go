@@ -3,49 +3,86 @@ package main
 import (
 	"errors"
 	"fmt"
-	"runtime"
+	"math/rand"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
-var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
-var Err int
+// type Task struct {
+// 	V int
+// 	R bool
+// }
 
-// type Task func() error // что тут нужно реализовывать?
-type Task struct {
-	Value int
-	Error bool
-}
+var (
+	Err                    int
+	ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
+)
 
-var Slice = []Task{
-	Task{300, false},
-	Task{500, true},
-	Task{200, false},
-	Task{600, true},
-	Task{1200, false},
-	Task{6460, true},
-	Task{2400, false},
-	Task{2200, false},
-	Task{6600, true},
-	Task{7500, false},
-	Task{6000, false},
-}
+// var m int
+type Task func() error
+
+//	var Slice = []Task{
+//		Task{300, false},
+//		Task{500, true},
+//		Task{200, false},
+//		Task{600, true},
+//		Task{1200, false},
+//		Task{6460, true},
+//		Task{2400, false},
+//		Task{2200, false},
+//		Task{6600, true},
+//		Task{7500, false},
+//		Task{6000, false},
+//	}
 var wg = sync.WaitGroup{}
 
 func main() {
-	start := time.Now()
-	Run(Slice, 10, 6)
+	tasksCount := 50
+	tasks := make([]Task, 0, tasksCount)
+
+	var runTasksCount int32
+	var sumTime time.Duration
+
+	for i := 0; i < tasksCount; i++ {
+
+		taskSleep := time.Millisecond * time.Duration(rand.Intn(100))
+
+		sumTime += taskSleep
+
+		tasks = append(tasks, func() error { // Почему он не добавляет в слайс ? Вернее он добавляет, но что то не понятное
+
+			time.Sleep(taskSleep)
+
+			atomic.AddInt32(&runTasksCount, 1) // из за этого не заходит сюда и не возвращает false в error
+
+			return nil
+		})
+	}
+
+	workersCount := 5
+	maxErrorsCount := 1
+
+	// start := time.Now()
+	err := Run(tasks, workersCount, maxErrorsCount)
+	// err := Run(tasks, workersCount, maxErrorsCount)
+	if err != nil {
+		fmt.Println("error running tasks", Err, err)
+	}
+	defer fmt.Println(runTasksCount)
 
 	wg.Wait()
-	duration := time.Since(start)
-	fmt.Println("Время работы функции:", duration)
 }
+
 func Run(tasks []Task, n, m int) error {
 	ch := make(chan Task)
+
 	go func() {
-		for _, task := range tasks {
+		for _, w := range tasks {
+			fmt.Println(&w)
 			if Err < m {
-				ch <- task
+				ch <- w
+				fmt.Println("write in ch")
 			} else {
 				fmt.Println("много ошибок")
 				break
@@ -57,23 +94,18 @@ func Run(tasks []Task, n, m int) error {
 		wg.Add(1)
 
 		go func() {
-
 			for {
-				t, ok := <-ch
+				_, ok := <-ch
 				if !ok {
+					fmt.Println("err = ", ok)
 					break
-				}
-				if t.Error {
+				} else {
+					fmt.Println("err =", ok)
 					Err++
 				}
 
-				time.Sleep(time.Duration(t.Value) * time.Millisecond)
-				fmt.Println(t.Value)
-
-				fmt.Println("Number of runnable goroutines: ", runtime.NumGoroutine())
 			}
 			wg.Done()
-
 		}()
 
 	}
@@ -82,5 +114,3 @@ func Run(tasks []Task, n, m int) error {
 	}
 	return nil
 }
-
-// Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
