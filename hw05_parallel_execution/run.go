@@ -65,53 +65,41 @@ func main() {
 // 	maxErrorsCount := 1
 
 // 	err := Run(tasks, workersCount, maxErrorsCount)
-
 // 	if err != nil {
 // 		fmt.Println("error running tasks", err)
 // 	}
-
 // 	wg.Wait()
-
 // 	fmt.Println("runTasksCount:", runTasksCount, "tasksCount", tasksCount)
 // }
 
 func Run(tasks []Task, n, m int) error {
 	ch := make(chan error)
 	Err := 0
-
 	go func() {
 		for _, w := range tasks {
 			if Err <= m {
 				ch <- w()
-
 			}
 		}
 		close(ch)
 	}()
 	for i := 0; i < len(tasks); i++ { // n
 		wg.Add(1)
-
 		go func() {
 			for {
 				t := <-ch
 				if t == nil {
 					break
 				} else if t != nil {
-
 					Err++
-
 					break
-
 				}
-
 			}
 			wg.Done()
 		}()
-
 	}
 	if Err >= m {
 		return ErrErrorsLimitExceeded
 	}
 	return nil
-
 }
