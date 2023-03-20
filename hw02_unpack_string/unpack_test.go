@@ -1,4 +1,4 @@
-package hw02unpackstring
+package main
 
 import (
 	"errors"
@@ -16,11 +16,14 @@ func TestUnpack(t *testing.T) {
 		{input: "abccd", expected: "abccd"},
 		{input: "", expected: ""},
 		{input: "aaa0b", expected: "aab"},
-		// uncomment if task with asterisk completed
-		// {input: `qwe\4\5`, expected: `qwe45`},
-		// {input: `qwe\45`, expected: `qwe44444`},
-		// {input: `qwe\\5`, expected: `qwe\\\\\`},
-		// {input: `qwe\\\3`, expected: `qwe\3`},
+		{input: "a2b1nn0", expected: "aabn"},
+		{input: "mm2r3b0", expected: "mmmrrr"},
+		{input: "e3", expected: "eee"},
+		{input: "b5x4", expected: "bbbbbxxxx"},
+		{input: "¥5♥4", expected: "¥¥¥¥¥♥♥♥♥"},
+		{input: "¥5x4", expected: "¥¥¥¥¥xxxx"},
+		{input: "¥5▷2", expected: "¥¥¥¥¥▷▷"},
+		{input: "❶5x4", expected: "❶❶❶❶❶xxxx"},
 	}
 
 	for _, tc := range tests {
@@ -34,12 +37,24 @@ func TestUnpack(t *testing.T) {
 }
 
 func TestUnpackInvalidString(t *testing.T) {
-	invalidStrings := []string{"3abc", "45", "aaa10b"}
-	for _, tc := range invalidStrings {
-		tc := tc
-		t.Run(tc, func(t *testing.T) {
-			_, err := Unpack(tc)
-			require.Truef(t, errors.Is(err, ErrInvalidString), "actual error %q", err)
+	testsError := []struct {
+		input         string
+		expectedError error
+	}{
+		{input: "b2m41i", expectedError: ErrNumAfterNum},
+		{input: "aaa10b", expectedError: ErrNumAfterNum},
+		{input: "nn23e", expectedError: ErrNumAfterNum},
+		{input: "3n5g", expectedError: ErrFirstNotLetter},
+		{input: "3abc", expectedError: ErrFirstNotLetter},
+		{input: "45", expectedError: ErrFirstNotLetter},
+	}
+	for i := range testsError {
+		tc := testsError[i]
+
+		t.Run(tc.input, func(t *testing.T) {
+			t.Parallel()
+			_, errorUnpack := Unpack(tc.input)
+			errors.Is(errorUnpack, tc.expectedError)
 		})
 	}
 }
