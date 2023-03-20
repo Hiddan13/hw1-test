@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	TextDefauilt = "a4b2"
+	TextDefauilt = "♥5x▷"
 	letter       = "letter"
 	number       = "number"
 )
@@ -17,27 +17,23 @@ const (
 var (
 	ErrNumAfterNum    = errors.New("number after number")
 	ErrFirstNotLetter = errors.New("first rune is not letterr")
-	ErrNotASCII       = errors.New("letter is not ASCII")
 )
 
-var numberint int
-
 func Unpack(text string) (string, error) {
+	var numberint int
 	var result strings.Builder
 	var value, typ, value1, typ1 string
 	runeline := []rune(text)
 	for _, c := range string(runeline) {
 		typ, value = DefineTypeOfLetter(c)
 		switch {
-		case c > unicode.MaxASCII:
-			return "", ErrNotASCII
 		case typ == letter:
 			if typ1 == letter {
 				result.WriteString(value1)
 			}
 		case typ == number && value1 != "":
-			if s, err := strconv.Atoi(value); err == nil {
-				numberint = s
+			if num, err := strconv.Atoi(value); err == nil {
+				numberint = num
 			}
 			switch {
 			case typ1 == number:
