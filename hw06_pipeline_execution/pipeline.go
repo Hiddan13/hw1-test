@@ -20,19 +20,24 @@ type Stage func(in In) (out Out)
 
 func ExecutePipeline(in In, done In, stages ...Stage) Out {
 	interfaceChan := make(chan interface{})
+
 	fmt.Println("len stages", len(stages))
 	go func() {
-		defer close(interfaceChan)
+
 		for _, i := range stages {
 			select {
 			case <-done:
 				return
 			case interfaceChan <- i(in):
+				i(interfaceChan)
 
 			}
 		}
 	}()
+
+	//defer close(interfaceChan)
 	return interfaceChan
+
 	// Place your code here.
 
 }
