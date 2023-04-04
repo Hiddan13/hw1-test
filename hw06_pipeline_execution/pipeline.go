@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 )
 
@@ -19,27 +20,31 @@ const (
 type Stage func(in In) (out Out)
 
 func ExecutePipeline(in In, done In, stages ...Stage) Out {
-	interfaceChan := make(chan interface{})
+	xx := in
+	for _, stage := range stages {
+		xx = resiver(xx, done)
+		xx = stage(xx)
+	}
+	return xx
+}
 
-	fmt.Println("len stages", len(stages))
+func resiver(in, done In) Out {
+	out := make(chan interface{})
 	go func() {
-
-		for _, i := range stages {
+		defer close(out)
+		for {
 			select {
+			case valIn, ok := <-in:
+				if !ok {
+					return
+				}
+				out <- valIn
 			case <-done:
 				return
-			case interfaceChan <- i(in):
-				i(interfaceChan)
-
 			}
 		}
 	}()
-
-	//defer close(interfaceChan)
-	return interfaceChan
-
-	// Place your code here.
-
+	return out
 }
 func main() {
 	g := func(_ string, f func(v interface{}) interface{}) Stage {
@@ -57,10 +62,14 @@ func main() {
 	}
 
 	stages := []Stage{
-		g("Dummy", func(v interface{}) interface{} { return v }),
+		g("Dummy", func(v interface{}) interface{} {
+			//fmt.Println(v.(int))
+			return v
+		}),
 		g("Multiplier (* 2)", func(v interface{}) interface{} { return v.(int) * 2 }),
 		g("Adder (+ 100)", func(v interface{}) interface{} { return v.(int) + 100 }),
 		//g("Stringifier", func(v interface{}) interface{} { return v.(int) }),
+		g("Stringifier", func(v interface{}) interface{} { return strconv.Itoa(v.(int)) }),
 	}
 
 	in := make(Bi)
@@ -77,8 +86,8 @@ func main() {
 	start := time.Now()
 	for s := range ExecutePipeline(in, nil, stages...) {
 		fmt.Println(s)
-		fmt.Printf("%T\n", s) //Судя по тесту я должен записать сбда строку , но у меня тут <- chan interface{}
-		//result = append(result, s.(string))//из за этого я не могу преобразовать в стринг
+		fmt.Printf("%T\n", s)               //Судя по тесту я должен записать сбда строку , но у меня тут <- chan interface{}
+		result = append(result, s.(string)) //из за этого я не могу преобразовать в стринг
 
 	}
 	fmt.Println("result", result)
