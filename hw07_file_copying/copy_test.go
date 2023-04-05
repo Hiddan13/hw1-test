@@ -13,36 +13,33 @@ import (
 func TestCopy(t *testing.T) {
 	// Place your code here.
 	testlen := []struct {
-		pathfrom   string
-		pathto     string
-		def_offset int64
-		def_limit  int64
-		len        int64
-		offset     int64
-		limit      int64
+		idelFile string
+		pathfrom string
+		pathto   string
+		offset0  int64
+		limit0   int64
+		len      int64
+		offset   int64
+		limit    int64
 	}{
-		//{"testdata/input.txt", "src/t.txt", 0, 0, 6742, 0, 0},
-		{"testdata/out_offset0_limit0.txt", "src/t0.txt", 0, 0, 6742, 0, 0},
-		{"testdata/out_offset0_limit10.txt", "src/t1.txt", 0, 0, 11, 0, 10},
-		{"testdata/out_offset0_limit1000.txt", "src/t2.txt", 0, 0, 1026, 0, 1000},
-		{"testdata/out_offset0_limit10000.txt", "src/t3.txt", 0, 0, 6742, 0, 10000},
-		//{"testdata/out_offset100_limit1000.txt", "src/t4.txt", 0, 0, 1017, 100, 1000},- по мойму там есть ошибка
-		{"testdata/out_offset6000_limit1000.txt", "src/t5.txt", 0, 0, 629, 6000, 1000},
+		{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "src1/t0.txt", 0, 0, 6742, 0, 0},
+		{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "src1/t1.txt", 0, 0, 11, 0, 10},
+		{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "src1/t2.txt", 0, 0, 1026, 0, 1000},
+		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "src1/t3.txt", 0, 0, 6742, 0, 10000},
+		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "src1/t5.txt", 0, 0, 629, 6000, 1000},
 	}
-	os.Mkdir("src", 0755) // testoffset_limit := []struct {
+	os.Mkdir("src1", 0o755)
 
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("test len", func(t *testing.T) {
 			if tc.offset > tc.limit {
-				err := CCopy("testdata/input.txt", "src/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+				err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
 				if err != nil {
 					require.Error(t, err, "offset > limit")
 				}
-
 			}
-			//t.Parallel()
-			err := CCopy(tc.pathfrom, tc.pathto, tc.def_offset, tc.def_limit)
+			err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit)
 			if err != nil {
 				fmt.Println(" CCopy", err)
 			}
@@ -55,24 +52,25 @@ func TestCopy(t *testing.T) {
 				fmt.Println("file.Stat", err)
 			}
 			ss := siz.Size
-			require.Equal(t, tc.len, ss())
+			if tc.limit != 0 {
+				require.Equal(t, tc.limit, ss())
+			} else {
+				require.Equal(t, tc.len, ss())
+			}
 		})
-
 	}
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("have file in dir", func(t *testing.T) {
 			if tc.offset > tc.limit {
-				err := CCopy("testdata/input.txt", "src/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+				err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
 				if err != nil {
 					require.Error(t, err, "offset > limit")
 				}
 			}
-			//t.Parallel()
 			_, err := os.Stat(tc.pathto)
 			if err != nil {
-				fmt.Println("на найдена в папке src")
-			} else {
+				fmt.Println("на найдена в папке src1")
 			}
 			require.Nil(t, err, "ok")
 		})
@@ -80,30 +78,26 @@ func TestCopy(t *testing.T) {
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("offset and limit is OK", func(t *testing.T) {
-			if tc.offset > tc.limit {
-				err := CCopy("testdata/input.txt", "src/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
-				if err != nil {
-					require.Error(t, err, "offset > limit")
-				}
+			err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+			if err != nil && tc.offset > tc.limit {
+				require.Error(t, err, "offset > limit")
 			} else {
-				err := CCopy("testdata/input.txt", "src/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
 				if err != nil {
 					fmt.Println(err)
 				}
-				file_test, err := os.Open("src/" + strconv.Itoa(i) + ".txt")
+				fileTest, err := os.Open("src1/" + strconv.Itoa(i) + ".txt")
 				if err != nil {
 					fmt.Println("os.Open", err)
 				}
-				buf_test := make([]byte, tc.limit)
-				file_test.Read(buf_test)
-				file_data, err := os.Open(tc.pathfrom)
+				bufTest := make([]byte, tc.limit)
+				fileTest.Read(bufTest)
+				fileData, err := os.Open(tc.pathfrom)
 				if err != nil {
 					fmt.Println("os.Open", err)
 				}
-				buf_data := make([]byte, tc.limit)
-				file_data.Read(buf_data)
-
-				require.True(t, bytes.Equal(buf_data, buf_test), "OK")
+				bufData := make([]byte, tc.limit)
+				fileData.Read(bufData)
+				require.True(t, bytes.Equal(bufData, bufTest), "OK")
 			}
 		})
 	}

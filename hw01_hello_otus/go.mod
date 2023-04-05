@@ -1,4 +1,4 @@
-module github.com/Hiddan13/hw1-test/hw01_hello_otus
+module main
 
 
 go 1.16
