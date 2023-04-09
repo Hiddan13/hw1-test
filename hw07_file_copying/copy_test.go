@@ -34,7 +34,7 @@ func TestCopy(t *testing.T) {
 		tc := testlen[i]
 		t.Run("test len", func(t *testing.T) {
 			err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
-			if err != nil && tc.offset > tc.limit {
+			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
 				err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit)
@@ -61,6 +61,7 @@ func TestCopy(t *testing.T) {
 
 	}
 }
+
 func TestCopy2(t *testing.T) {
 	testlen := []struct {
 		idelFile string
@@ -83,7 +84,7 @@ func TestCopy2(t *testing.T) {
 		tc := testlen[i]
 		t.Run("offset and limit is OK", func(t *testing.T) {
 			err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
-			if err != nil && tc.offset > tc.limit {
+			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
 				if err != nil {
