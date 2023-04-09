@@ -8,7 +8,6 @@ import (
 	jwriter "github.com/mailru/easyjson/jwriter"
 )
 
-// suppress unused package warning
 var (
 	_ *json.RawMessage
 	_ *jlexer.Lexer
