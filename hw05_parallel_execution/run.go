@@ -54,23 +54,20 @@ func Run(tasks []Task, n, m int) error {
 	return nil
 }
 
-func doSmthWork(wg *sync.WaitGroup,
-	read_from_chTask <-chan Task,
-	read_from_chError chan<- error,
-	read_from_chDone <-chan struct{}) {
+func doSmthWork(wg *sync.WaitGroup, readChTask <-chan Task, readchError chan<- error, readchDone <-chan struct{}) {
 	defer wg.Done()
 
 	for {
 		select {
-		case <-read_from_chDone:
+		case <-readchDone:
 			return
-		case task, ok := <-read_from_chTask:
+		case task, ok := <-readChTask:
 			if !ok {
 				return
 			}
 			err := task()
 			if err != nil {
-				read_from_chError <- err
+				readchError <- err
 			}
 		}
 	}
