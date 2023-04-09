@@ -31,15 +31,15 @@ func countDomains(r io.Reader, domain string) (DomainStat, error) {
 	str.WriteString(domain)
 
 	fileScanner := bufio.NewScanner(r)
-	var userr User
+	var user User
 	result := make(DomainStat)
 	dm := str.String()
 	for fileScanner.Scan() {
-		if err := easyjson.Unmarshal(fileScanner.Bytes(), &userr); err != nil {
+		if err := easyjson.Unmarshal(fileScanner.Bytes(), &user); err != nil {
 			return nil, err
 		}
-		if strings.Contains(userr.Email, dm) {
-			result[strings.ToLower(strings.SplitN(userr.Email, "@", 2)[1])]++
+		if strings.Contains(user.Email, dm) {
+			result[strings.ToLower(strings.SplitN(user.Email, "@", 2)[1])]++
 		}
 	}
 	return result, nil
