@@ -35,6 +35,3 @@ func resiver(in, done In) Out {
 	}()
 	return out
 }
-
-func main() {
-}
