@@ -9,24 +9,24 @@ import (
 
 	"github.com/stretchr/testify/require"
 )
-testlen := []struct {
-	idelFile string
-	pathfrom string
-	pathto   string
-	offset0  int64
-	limit0   int64
-	len      int64
-	offset   int64
-	limit    int64
-}{
-	{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "src1/t0.txt", 0, 0, 6742, 0, 0},
-	{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "src1/t1.txt", 0, 0, 11, 0, 10},
-	{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "src1/t2.txt", 0, 0, 1026, 0, 1000},
-	{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "src1/t3.txt", 0, 0, 6742, 0, 10000},
-	{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "src1/t5.txt", 0, 0, 629, 6000, 1000},
-}
 
 func TestCopy(t *testing.T) {
+	testlen := []struct {
+		idelFile string
+		pathfrom string
+		pathto   string
+		offset0  int64
+		limit0   int64
+		len      int64
+		offset   int64
+		limit    int64
+	}{
+		{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "src1/t0.txt", 0, 0, 6742, 0, 0},
+		{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "src1/t1.txt", 0, 0, 11, 0, 10},
+		{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "src1/t2.txt", 0, 0, 1026, 0, 1000},
+		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "src1/t3.txt", 0, 0, 6742, 0, 10000},
+		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "src1/t5.txt", 0, 0, 629, 6000, 1000},
+	}
 
 	os.Mkdir("src1", 0o755)
 
@@ -60,8 +60,25 @@ func TestCopy(t *testing.T) {
 		})
 
 	}
-	func TestCopy2(t *testing.T) {
-	
+}
+func TestCopy2(t *testing.T) {
+	testlen := []struct {
+		idelFile string
+		pathfrom string
+		pathto   string
+		offset0  int64
+		limit0   int64
+		len      int64
+		offset   int64
+		limit    int64
+	}{
+		{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "src1/t0.txt", 0, 0, 6742, 0, 0},
+		{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "src1/t1.txt", 0, 0, 11, 0, 10},
+		{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "src1/t2.txt", 0, 0, 1026, 0, 1000},
+		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "src1/t3.txt", 0, 0, 6742, 0, 10000},
+		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "src1/t5.txt", 0, 0, 629, 6000, 1000},
+	}
+
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("offset and limit is OK", func(t *testing.T) {
@@ -88,5 +105,4 @@ func TestCopy(t *testing.T) {
 			}
 		})
 	}
-}
 }
