@@ -54,7 +54,10 @@ func Run(tasks []Task, n, m int) error {
 	return nil
 }
 
-func doSmthWork(wg *sync.WaitGroup, read_from_chTask <-chan Task, read_from_chError chan<- error, read_from_chDone <-chan struct{}) {
+func doSmthWork(wg *sync.WaitGroup,
+	read_from_chTask <-chan Task,
+	read_from_chError chan<- error,
+	read_from_chDone <-chan struct{}) {
 	defer wg.Done()
 
 	for {
