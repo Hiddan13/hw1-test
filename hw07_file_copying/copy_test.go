@@ -33,47 +33,32 @@ func TestCopy(t *testing.T) {
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("test len", func(t *testing.T) {
-			if tc.offset > tc.limit {
-				err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
-				if err != nil {
-					require.Error(t, err, "offset > limit")
-				}
-			}
-			err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit)
-			if err != nil {
-				fmt.Println(" CCopy", err)
-			}
-			file, err := os.Open(tc.pathto)
-			if err != nil {
-				fmt.Println("os.Open", err)
-			}
-			siz, err := file.Stat()
-			if err != nil {
-				fmt.Println("file.Stat", err)
-			}
-			ss := siz.Size
-			if tc.limit != 0 {
-				require.Equal(t, tc.limit, ss())
+			err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+			if err != nil && tc.offset > tc.limit {
+				require.Error(t, err, "offset > limit")
 			} else {
-				require.Equal(t, tc.len, ss())
-			}
-		})
-	}
-	for i := range testlen {
-		tc := testlen[i]
-		t.Run("have file in dir", func(t *testing.T) {
-			if tc.offset > tc.limit {
-				err := Copy(tc.idelFile, "src1/"+strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+				err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit)
 				if err != nil {
-					require.Error(t, err, "offset > limit")
+					fmt.Println(" CCopy", err)
+				}
+				file, err := os.Open(tc.pathto)
+				if err != nil {
+					fmt.Println("os.Open", err)
+				}
+				siz, err := file.Stat()
+				if err != nil {
+					fmt.Println("file.Stat", err)
+				}
+				require.Nil(t, err, "ok")
+				ss := siz.Size
+				if tc.limit != 0 {
+					require.Equal(t, tc.limit, ss())
+				} else {
+					require.Equal(t, tc.len, ss())
 				}
 			}
-			_, err := os.Stat(tc.pathto)
-			if err != nil {
-				fmt.Println("на найдена в папке src1")
-			}
-			require.Nil(t, err, "ok")
 		})
+
 	}
 	for i := range testlen {
 		tc := testlen[i]

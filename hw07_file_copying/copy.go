@@ -51,8 +51,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 			return err
 		}
 		w, err := f.Write(buf)
-		fmt.Println(w)
-		if err != nil {
+		if err != nil && w >= 0 {
 			return err
 		}
 	}
