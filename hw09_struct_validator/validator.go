@@ -71,7 +71,7 @@ func Validate(v interface{}) error {
 	return ve
 }
 
-func containsSlice(s []string, val int) (bool, error) {
+func contaiтSlice(s []string, val int) (bool, error) {
 	for _, v := range s {
 		if l, err := strconv.Atoi(v); err != nil {
 			return false, err
@@ -148,7 +148,7 @@ func validateInt(val int, tagValue string, name string) error {
 				ve = append(ve, ValidationError{name, ErrMax})
 			}
 		case "in":
-			if ok, err := containsSlice(strings.Split(m[1], ","), val); err != nil {
+			if ok, err := contaiтSlice(strings.Split(m[1], ","), val); err != nil {
 				return err
 			} else if !ok {
 				ve = append(ve, ValidationError{name, ErrIn})
