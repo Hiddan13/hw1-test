@@ -1,6 +1,7 @@
-package hw03frequencyanalysis
+package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -62,6 +63,7 @@ func TestTop10(t *testing.T) {
 				"кристофер", // 4
 				"не",        // 4
 			}
+			fmt.Println("11")
 			require.Equal(t, expected, Top10(text))
 		} else {
 			expected := []string{
@@ -76,6 +78,7 @@ func TestTop10(t *testing.T) {
 				"не",        // 4
 				"то",        // 4
 			}
+			fmt.Println("22")
 			require.Equal(t, expected, Top10(text))
 		}
 	})
