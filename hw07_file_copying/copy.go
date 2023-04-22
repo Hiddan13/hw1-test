@@ -19,11 +19,11 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	}
 	buf := make([]byte, limit)
 	if limit == 0 {
-		b, err := os.ReadFile(fromPath)
+		buf1, err := os.ReadFile(fromPath)
 		if err != nil && err != io.EOF {
 			fmt.Println(err)
 		}
-		buf = b
+		buf = buf1
 	}
 	file, err := os.Open(fromPath)
 	defer func() {
