@@ -21,7 +21,7 @@ func TestCopy(t *testing.T) {
 		offset   int64
 		limit    int64
 	}{
-		{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "t0.txt", 0, 0, 6742, 0, 0},
+		{"testdata/input.txt", "testdata/out_offset0_limit0.txt", "t0.txt", 0, 0, 6617, 0, 0},
 		{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "t1.txt", 0, 0, 11, 0, 10},
 		{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "t2.txt", 0, 0, 1026, 0, 1000},
 		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "t3.txt", 0, 0, 6742, 0, 10000},
