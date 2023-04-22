@@ -10,7 +10,7 @@ import (
 )
 
 func TestCopy(t *testing.T) {
-	test_slice := []struct {
+	testData := []struct {
 		idelFile string
 		pathfrom string
 		pathto   string
@@ -23,8 +23,8 @@ func TestCopy(t *testing.T) {
 		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "t3.txt", 0, 10000},
 		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "t5.txt", 6000, 1000},
 	}
-	for i := range test_slice {
-		tc := test_slice[i]
+	for i := range testData {
+		tc := testData[i]
 		t.Run("offset and limit is OK", func(t *testing.T) {
 			err := Copy(tc.idelFile, strconv.Itoa(i)+".txt", tc.offset, tc.limit)
 			if err != nil {
