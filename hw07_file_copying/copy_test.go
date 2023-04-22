@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"testing"
@@ -28,7 +28,6 @@ func TestCopy(t *testing.T) {
 		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "src1/t5.txt", 0, 0, 629, 6000, 1000},
 	}
 	os.Mkdir("src1", 0o755)
-
 	for i := range testlen {
 		tc := testlen[i]
 		t.Run("test len", func(t *testing.T) {
@@ -36,18 +35,13 @@ func TestCopy(t *testing.T) {
 			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
-				err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit)
-				if err != nil {
-					fmt.Println(" Copy", err)
+				if err := Copy(tc.pathfrom, tc.pathto, tc.offset0, tc.limit); err != nil {
+					log.Fatal(err)
 				}
 				file, err := os.Open(tc.pathto)
-				if err != nil {
-					fmt.Println("os.Open", err)
-				}
+				require.NoError(t, err)
 				siz, err := file.Stat()
-				if err != nil {
-					fmt.Println("file.Stat", err)
-				}
+				require.NoError(t, err)
 				require.Nil(t, err, "ok")
 				ss := siz.Size
 				if tc.limit != 0 {
@@ -62,19 +56,12 @@ func TestCopy(t *testing.T) {
 			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
-				if err != nil {
-					fmt.Println(err)
-				}
 				fileTest, err := os.Open("src1/" + strconv.Itoa(i) + ".txt")
-				if err != nil {
-					fmt.Println("os.Open", err)
-				}
+				require.NoError(t, err)
 				bufTest := make([]byte, tc.limit)
 				fileTest.Read(bufTest)
 				fileData, err := os.Open(tc.pathfrom)
-				if err != nil {
-					fmt.Println("os.Open", err)
-				}
+				require.NoError(t, err)
 				bufData := make([]byte, tc.limit)
 				fileData.Read(bufData)
 				require.True(t, bytes.Equal(bufData, bufTest), "OK")
