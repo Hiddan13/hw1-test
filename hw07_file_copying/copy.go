@@ -44,8 +44,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	}
 	if offset < fSize() {
 		file.Seek(offset, io.SeekStart)
-		ee, _ := file.Read(buf)
-		fmt.Println(ee)
+		file.Read(buf)
 		f, err := os.Create(toPath)
 		if err != nil {
 			return err

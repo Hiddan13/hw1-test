@@ -26,7 +26,7 @@ func TestCopy(t *testing.T) {
 	for i := range testData {
 		tc := testData[i]
 		t.Run("offset and limit is OK", func(t *testing.T) {
-			err := Copy(tc.idelFile, strconv.Itoa(i)+".txt", tc.offset, tc.limit)
+			err := Copy(tc.idelFile, tc.pathto, tc.offset, tc.limit)
 			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
