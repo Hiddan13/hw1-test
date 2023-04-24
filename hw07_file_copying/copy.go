@@ -30,8 +30,11 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	if err != nil {
 		return err
 	}
-	fSize := fileInfo.Size
 	buf := make([]byte, limit)
+	fSize := fileInfo.Size
+	if limit > fSize() {
+		buf = make([]byte, fSize())
+	}
 	if limit == 0 {
 		b, err := os.ReadFile(fromPath)
 		if err != nil {
@@ -39,9 +42,10 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 		}
 		buf = b
 	}
-	if offset < fSize() || limit > fSize() {
+	if offset < fSize() {
 		file.Seek(offset, io.SeekStart)
-		file.Read(buf)
+		ee, _ := file.Read(buf)
+		fmt.Println(ee)
 		f, err := os.Create(toPath)
 		if err != nil {
 			return err
