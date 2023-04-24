@@ -32,7 +32,7 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	}
 	fSize := fileInfo.Size
 	buf := make([]byte, limit)
-	if limit == 0 && limit > fSize() {
+	if limit == 0 {
 		b, err := os.ReadFile(fromPath)
 		if err != nil {
 			fmt.Println(err)
