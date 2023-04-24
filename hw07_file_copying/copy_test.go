@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"os"
-	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -30,7 +29,7 @@ func TestCopy(t *testing.T) {
 			if err != nil {
 				require.Error(t, err, "offset > limit")
 			} else {
-				fileTest, err := os.Open(strconv.Itoa(i) + ".txt")
+				fileTest, err := os.Open(tc.pathto)
 				require.NoError(t, err)
 				bufTest := make([]byte, tc.limit)
 				fileTest.Read(bufTest)
