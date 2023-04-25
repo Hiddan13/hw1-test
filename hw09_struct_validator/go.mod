@@ -1,4 +1,4 @@
-module mod
+module github.com/Hiddan13/hw1-test/hw09_struct_validator
 
 go 1.19
 
