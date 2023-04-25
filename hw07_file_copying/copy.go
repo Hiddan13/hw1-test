@@ -14,9 +14,9 @@ var (
 )
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
-	if offset > limit {
-		return fmt.Errorf("offset > limit")
-	}
+	// if offset > limit {
+	// 	return fmt.Errorf("offset > limit")
+	// }
 	file, err := os.Open(fromPath)
 	defer func() {
 		if err = file.Close(); err != nil {
@@ -34,6 +34,9 @@ func Copy(fromPath, toPath string, offset, limit int64) error {
 	fSize := fileInfo.Size
 	if limit > fSize() {
 		buf = make([]byte, fSize())
+	}
+	if limit+offset > fSize() {
+		buf = make([]byte, fSize()-offset)
 	}
 	if limit == 0 {
 		b, err := os.ReadFile(fromPath)
