@@ -1,4 +1,4 @@
-module mod
+module github.com/Hiddan13/hw1-test/hw10_program_optimization
 
 go 1.19
 
