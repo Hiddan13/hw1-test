@@ -20,6 +20,7 @@ func TestCopy(t *testing.T) {
 		{"testdata/input.txt", "testdata/out_offset0_limit10.txt", "t1.txt", 0, 10},
 		{"testdata/input.txt", "testdata/out_offset0_limit1000.txt", "t2.txt", 0, 1000},
 		{"testdata/input.txt", "testdata/out_offset0_limit10000.txt", "t3.txt", 0, 10000},
+		{"testdata/input.txt", "testdata/out_offset6000_limit1000.txt", "t5.txt", 6000, 1000},
 	}
 	for i := range testData {
 		tc := testData[i]
