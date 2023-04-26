@@ -2,10 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"io"
+	"log"
 	"os"
-
-	"github.com/cheggaaa/pb"
 )
 
 var (
@@ -13,47 +13,49 @@ var (
 	ErrOffsetExceedsFileSize = errors.New("offset exceeds file size")
 )
 
-func Copy(fromPath string, toPath string, offset, limit int64) error {
-	oldFile, err := os.Open(fromPath)
-
-	if err != nil {
-		return ErrUnsupportedFile
-	}
-	defer oldFile.Close()
-
-	fileInfo, err := oldFile.Stat()
-
+func Copy(fromPath, toPath string, offset, limit int64) error {
+	file, err := os.Open(fromPath)
+	defer func() {
+		if err = file.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 	if err != nil {
 		return err
 	}
-
-	switch {
-	case fileInfo.IsDir():
-		return ErrUnsupportedFile
-	case fileInfo.Size() < offset:
-		return ErrOffsetExceedsFileSize
-	default:
-	}
-
-	if _, err := oldFile.Seek(offset, io.SeekStart); err != nil {
-		return err
-	}
-
-	newFile, err := os.Create(toPath)
+	fileInfo, err := file.Stat()
 	if err != nil {
 		return err
 	}
-	defer newFile.Close()
-
-	count := int(fileInfo.Size() - offset)
-	bar := pb.StartNew(count)
-	defer bar.Finish()
-
-	barReader := bar.NewProxyReader(oldFile)
-	_, err = io.CopyN(newFile, barReader, limit)
-	if err != nil {
-		return err
+	buf := make([]byte, limit)
+	fSize := fileInfo.Size
+	if limit > fSize() {
+		buf = make([]byte, fSize())
 	}
-
+	if limit+offset > fSize() {
+		buf = make([]byte, fSize()-offset)
+	}
+	if limit == 0 {
+		b, err := os.ReadFile(fromPath)
+		if err != nil {
+			fmt.Println(err)
+		}
+		buf = b
+	}
+	fmt.Println(fSize())
+	fmt.Println("limit", limit)
+	fmt.Println("buf", len(buf))
+	if offset < fSize() {
+		file.Seek(offset, io.SeekStart)
+		file.Read(buf)
+		f, err := os.Create(toPath)
+		if err != nil {
+			return err
+		}
+		w, err := f.Write(buf)
+		if err != nil && w >= 0 {
+			return err
+		}
+	}
 	return nil
 }
