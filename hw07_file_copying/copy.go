@@ -2,6 +2,10 @@ package main
 
 import (
 	"errors"
+	"fmt"
+	"io"
+	"log"
+	"os"
 )
 
 var (
@@ -10,6 +14,48 @@ var (
 )
 
 func Copy(fromPath, toPath string, offset, limit int64) error {
-	// Place your code here.
+	file, err := os.Open(fromPath)
+	defer func() {
+		if err = file.Close(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+	if err != nil {
+		return err
+	}
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return err
+	}
+	buf := make([]byte, limit)
+	fSize := fileInfo.Size
+	if limit > fSize() {
+		buf = make([]byte, fSize())
+	}
+	if limit+offset > fSize() {
+		buf = make([]byte, fSize()-offset)
+	}
+	if limit == 0 {
+		b, err := os.ReadFile(fromPath)
+		if err != nil {
+			fmt.Println(err)
+		}
+		buf = b
+	}
+	fmt.Println(fSize())
+	fmt.Println("limit", limit)
+	fmt.Println("buf", len(buf))
+	if offset < fSize() {
+		file.Seek(offset, io.SeekStart)
+		file.Read(buf)
+		f, err := os.Create(toPath)
+		if err != nil {
+			return err
+		}
+		w, err := f.Write(buf)
+		if err != nil && w >= 0 {
+			return err
+		}
+	}
 	return nil
 }

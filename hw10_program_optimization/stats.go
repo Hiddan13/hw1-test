@@ -39,11 +39,13 @@ func getUsers(r io.Reader) (result users, err error) {
 
 	lines := strings.Split(string(content), "\n")
 	for i, line := range lines {
-		var user User
-		if err = json.Unmarshal([]byte(line), &user); err != nil {
-			return
-		}
-		result[i] = user
+		go func(ii int, lline string) {
+			var user User
+			if err = json.Unmarshal([]byte(lline), &user); err != nil {
+				return
+			}
+			result[ii] = user
+		}(i, line)
 	}
 	return
 }
